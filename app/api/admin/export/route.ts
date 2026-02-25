@@ -10,7 +10,7 @@ function csvEscape(v: any) {
 
 export async function GET() {
   const session = await getSession();
-  if (session.role !== "ADMIN") {
+  if (session.user?.role !== "ADMIN") {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
 
