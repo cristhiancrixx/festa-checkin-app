@@ -1,9 +1,10 @@
 import InviteClient from "./InviteClient";
 
-export default function Page({
-  params,
-}: {
-  params: { token: string };
-}) {
-  return <InviteClient token={params.token} />;
+type Props = {
+  params: Promise<{ token: string }>;
+};
+
+export default async function Page({ params }: Props) {
+  const { token } = await params;
+  return <InviteClient token={token} />;
 }
