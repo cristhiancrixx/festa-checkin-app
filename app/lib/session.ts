@@ -1,23 +1,23 @@
-import { getIronSession, IronSessionData } from "iron-session";
+import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
 export type AppRole = "ADMIN" | "STAFF";
 
-export interface SessionData extends IronSessionData {
-  role?: AppRole;
-}
+export type SessionData = {
+  user?: {
+    id: string;
+    role: AppRole;
+  };
+};
 
-export async function getSession() {
-  const password = process.env.SESSION_PASSWORD;
-  if (!password || password.length < 32) {
-    throw new Error("SESSION_PASSWORD precisa ter 32+ caracteres");
-  }
+const sessionOptions = {
+  password: process.env.SESSION_PASSWORD!,
+  cookieName: "festa_session",
+  cookieOptions: {
+    secure: process.env.NODE_ENV === "production",
+  },
+};
 
-  return getIronSession<SessionData>(await cookies(), {
-    cookieName: "festa_session",
-    password,
-    cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
-    },
-  });
+export function getSession() {
+  return getIronSession<SessionData>(cookies(), sessionOptions);
 }
